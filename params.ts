@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { findGuideParamsPrompt } from "./utils";
+import { getFindGuideParamsPrompt } from "./utils";
 
-
-export const getGuideParams = z.object({
-  guideLink: z.string().describe(findGuideParamsPrompt),
-});
-
+export function getGuideParams() {
+  return z.object({
+    guideLink: z.string().describe(getFindGuideParamsPrompt()),
+  });
+}
