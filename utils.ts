@@ -9,7 +9,8 @@ export function getFormattedSidebar() {
   return sidebar;
 }
 
-export const findGuideParamsPrompt = `
+export function getFindGuideParamsPrompt() {
+  return `
     This is the path to the technical documentation to create actions from.
     To get the steps list, you need to pass the guideLink to the BuildOnBase getGuide tool.
     From the user prompt, find the most relevant guide from the sidebar of the docs website.
@@ -21,6 +22,7 @@ export const findGuideParamsPrompt = `
   
     You will find that in the sidebar list, the guide is under the "Smart Wallet" section.
     `;
+}
 
 export const testingPrompt = (code: string) => {
   return `
