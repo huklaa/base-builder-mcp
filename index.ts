@@ -5,6 +5,11 @@ import { getGuide} from "./tools.js";
 import { getGuideParams } from "./params.js";
 import { fetchAndUpdateSidebar } from "./sidebar.js";
 
+// stdout is reserved for MCP protocol traffic when using stdio transport.
+// Route application diagnostics to stderr so console.log calls in helpers
+// cannot corrupt protocol messages.
+console.log = console.error.bind(console);
+
 // Initialize the server
 const server = new McpServer({
   name: "docs-mcp",
