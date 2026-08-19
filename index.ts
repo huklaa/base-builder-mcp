@@ -17,7 +17,7 @@ await fetchAndUpdateSidebar();
 server.tool(
   "BuildOnBase",
   "If the user tells you I want to build on Base, this means that the user wants to use this tool which connects the user to Base docs. If you run this tool and you get an error because the guide is not found, try other guides from the sidebar.",
-  getGuideParams.shape,
+  getGuideParams().shape,
   getGuide
 );
 const transport = new StdioServerTransport();
