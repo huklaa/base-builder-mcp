@@ -7,9 +7,9 @@ export const getGuide = async ({
 }: z.infer<typeof getGuideParams>) => {
   console.log("Received request for guide:", guideLink);
   try {
-    // Remove the base URL prefix and ensure the path starts correctly
+    // Remove the public docs origin and resolve the route in the active Base docs repo.
     const guidePath = guideLink.replace("https://docs.base.org", "");
-    const githubRawUrl = `https://raw.githubusercontent.com/base/web/refs/heads/master/apps/base-docs/docs/pages${guidePath}.mdx`;
+    const githubRawUrl = `https://raw.githubusercontent.com/base/docs/refs/heads/master/docs${guidePath}.mdx`;
     console.log("Fetching from URL:", githubRawUrl);
 
     const response = await fetch(githubRawUrl);
