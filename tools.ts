@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const getGuide = async ({
   guideLink,
-}: z.infer<typeof getGuideParams>) => {
+}: z.infer<ReturnType<typeof getGuideParams>>) => {
   console.log("Received request for guide:", guideLink);
   try {
     // Remove the base URL prefix and ensure the path starts correctly
