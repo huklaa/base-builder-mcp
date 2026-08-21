@@ -5,26 +5,26 @@ import { z } from "zod";
 export const getGuide = async ({
   guideLink,
 }: z.infer<typeof getGuideParams>) => {
-  console.log("Received request for guide:", guideLink);
+  console.error("Received request for guide:", guideLink);
   try {
     // Remove the base URL prefix and ensure the path starts correctly
     const guidePath = guideLink.replace("https://docs.base.org", "");
     const githubRawUrl = `https://raw.githubusercontent.com/base/web/refs/heads/master/apps/base-docs/docs/pages${guidePath}.mdx`;
-    console.log("Fetching from URL:", githubRawUrl);
+    console.error("Fetching from URL:", githubRawUrl);
 
     const response = await fetch(githubRawUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch guide: ${response.statusText}`);
     }
     const guide = await response.text();
-    console.log("Successfully fetched guide content");
+    console.error("Successfully fetched guide content");
 
     let finalResult = guide;
 
     if (process.env.OPENAI_API_KEY) {
       const client = new OpenAI();
       // Process the guide content with GPT-4
-      console.log("Processing with ChatGPT...");
+      console.error("Processing with ChatGPT...");
       const result = await client.responses.create({
         model: "gpt-4o-mini",
         input: [
@@ -37,7 +37,7 @@ export const getGuide = async ({
         ],
       });
       finalResult = result.output_text;
-      console.log("Successfully processed guide content");
+      console.error("Successfully processed guide content");
     }
 
     return {
