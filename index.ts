@@ -11,8 +11,16 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Fetch sidebar before starting the server
-await fetchAndUpdateSidebar();
+// stdout is reserved for MCP protocol messages. The sidebar helper currently
+// uses console.log for diagnostics, so route those startup logs to stderr while
+// it refreshes the sidebar.
+const stdoutLog = console.log;
+console.log = console.error;
+try {
+  await fetchAndUpdateSidebar();
+} finally {
+  console.log = stdoutLog;
+}
 
 server.tool(
   "BuildOnBase",
