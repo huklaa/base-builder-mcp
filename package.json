@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx tsc && node --test build/sidebar.test.js",
     "start": "node index.ts",
     "setup:cursor": "npx tsc && node build/scripts/setup-cursor.js",
     "setup:claude": "npx tsc && node build/scripts/setup-claude.js"
