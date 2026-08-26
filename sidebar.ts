@@ -1,6 +1,6 @@
 const FALLBACK_NAVIGATION = [
   "Base docs navigation is temporarily unavailable.",
-  "Browse the current documentation at https://docs.base.org/.",
+  "- https://docs.base.org/get-started/base",
 ].join("\n");
 
 let sidebarContent = FALLBACK_NAVIGATION;
