@@ -1,7 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { formatDocsNavigation } from "./sidebar.js";
+import { formatDocsNavigation, getSidebar } from "./sidebar.js";
+
+test("uses a resolvable Base docs page for the initial fallback", () => {
+  assert.equal(
+    getSidebar(),
+    [
+      "Base docs navigation is temporarily unavailable.",
+      "- https://docs.base.org/get-started/base",
+    ].join("\n"),
+  );
+});
 
 test("formats nested Base docs navigation", () => {
   const navigation = {
