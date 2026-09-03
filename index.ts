@@ -2,7 +2,6 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import "dotenv/config";
 import { getGuide} from "./tools.js";
-import { getGuideParams } from "./params.js";
 import { fetchAndUpdateSidebar } from "./sidebar.js";
 
 // Initialize the server
@@ -11,8 +10,11 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Fetch sidebar before starting the server
+// Fetch sidebar before starting the server. params.ts builds the guideLink schema
+// description at module evaluation time, so import it only after the refreshed
+// sidebar is available instead of permanently capturing the fallback content.
 await fetchAndUpdateSidebar();
+const { getGuideParams } = await import("./params.js");
 
 server.tool(
   "BuildOnBase",
