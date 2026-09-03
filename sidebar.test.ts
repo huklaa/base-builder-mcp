@@ -107,6 +107,28 @@ test("keeps docs anchors and excludes unsupported external anchors", () => {
   );
 });
 
+test("keeps labeled docs links and excludes labeled external links", () => {
+  const navigation = {
+    global: {
+      anchors: [
+        {
+          label: "Cookie Policy",
+          href: "https://docs.base.org/cookie-policy",
+        },
+        {
+          label: "GitHub",
+          href: "https://github.com/base",
+        },
+      ],
+    },
+  };
+
+  assert.equal(
+    formatDocsNavigation(navigation),
+    "Cookie Policy  https://docs.base.org/cookie-policy",
+  );
+});
+
 test("ignores malformed nodes", () => {
   const navigation = [
     {
