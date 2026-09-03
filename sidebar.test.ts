@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { formatDocsNavigation, getSidebar } from "./sidebar.js";
+import {
+  fetchAndUpdateSidebar,
+  formatDocsNavigation,
+  getSidebar,
+} from "./sidebar.js";
 
 test("uses a resolvable Base docs page for the initial fallback", () => {
   assert.equal(
@@ -148,4 +152,60 @@ test("ignores malformed nodes", () => {
 
 test("returns an empty string when navigation is missing", () => {
   assert.equal(formatDocsNavigation(undefined), "");
+});
+
+test("refreshes sidebar content from the current docs config", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(
+      JSON.stringify({
+        navigation: {
+          tabs: [
+            {
+              tab: "Build",
+              groups: [
+                {
+                  group: "Quickstart",
+                  pages: ["get-started/base"],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+      { status: 200 },
+    );
+
+  try {
+    await fetchAndUpdateSidebar();
+    assert.equal(
+      getSidebar(),
+      [
+        "Build",
+        "  Quickstart",
+        "    - https://docs.base.org/get-started/base",
+      ].join("\n"),
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("restores the resolvable fallback when docs refresh fails", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response("", { status: 500, statusText: "Internal Server Error" });
+
+  try {
+    await fetchAndUpdateSidebar();
+    assert.equal(
+      getSidebar(),
+      [
+        "Base docs navigation is temporarily unavailable.",
+        "- https://docs.base.org/get-started/base",
+      ].join("\n"),
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
