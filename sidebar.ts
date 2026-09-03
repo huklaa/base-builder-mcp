@@ -9,6 +9,7 @@ type DocsNavigationNode = {
   tab?: string;
   group?: string;
   anchor?: string;
+  label?: string;
   href?: string;
   pages?: unknown[];
   groups?: unknown[];
@@ -34,11 +35,10 @@ function formatNavigation(value: unknown, depth = 0): string[] {
   const node = value as DocsNavigationNode;
 
   // The MCP guideLink parameter only accepts Base documentation URLs. Current
-  // Mintlify global anchors also contain external destinations such as Status,
+  // Mintlify navigation also contains external destinations such as Status,
   // Blog, Explorer, and GitHub; advertising those as guide choices can make the
   // model select a URL that getGuide cannot resolve.
   if (
-    typeof node.anchor === "string" &&
     typeof node.href === "string" &&
     !node.href.startsWith("https://docs.base.org/")
   ) {
@@ -52,7 +52,9 @@ function formatNavigation(value: unknown, depth = 0): string[] {
         ? node.group
         : typeof node.anchor === "string"
           ? node.anchor
-          : null;
+          : typeof node.label === "string"
+            ? node.label
+            : null;
 
   const lines: string[] = [];
   const childDepth = label ? depth + 1 : depth;
