@@ -19,9 +19,22 @@ type DocsNavigationNode = {
   [key: string]: unknown;
 };
 
+function resolveDocsUrl(value: string): string | null {
+  try {
+    const url = new URL(value, "https://docs.base.org");
+    if (url.origin !== "https://docs.base.org") {
+      return null;
+    }
+    return url.href;
+  } catch {
+    return null;
+  }
+}
+
 function formatNavigation(value: unknown, depth = 0): string[] {
   if (typeof value === "string") {
-    return [`${"  ".repeat(depth)}- https://docs.base.org/${value}`];
+    const href = resolveDocsUrl(value);
+    return href ? [`${"  ".repeat(depth)}- ${href}`] : [];
   }
 
   if (Array.isArray(value)) {
@@ -33,15 +46,13 @@ function formatNavigation(value: unknown, depth = 0): string[] {
   }
 
   const node = value as DocsNavigationNode;
+  const href = typeof node.href === "string" ? resolveDocsUrl(node.href) : null;
 
   // The MCP guideLink parameter only accepts Base documentation URLs. Current
   // Mintlify navigation also contains external destinations such as Status,
   // Blog, Explorer, and GitHub; advertising those as guide choices can make the
   // model select a URL that getGuide cannot resolve.
-  if (
-    typeof node.href === "string" &&
-    !node.href.startsWith("https://docs.base.org/")
-  ) {
+  if (typeof node.href === "string" && !href) {
     return [];
   }
 
@@ -60,7 +71,7 @@ function formatNavigation(value: unknown, depth = 0): string[] {
   const childDepth = label ? depth + 1 : depth;
 
   if (label) {
-    const suffix = typeof node.href === "string" ? `  ${node.href}` : "";
+    const suffix = href ? `  ${href}` : "";
     lines.push(`${"  ".repeat(depth)}${label}${suffix}`);
   }
 
