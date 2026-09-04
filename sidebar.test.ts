@@ -43,6 +43,20 @@ test("formats nested Base docs navigation", () => {
   );
 });
 
+test("normalizes root-relative and absolute Base docs page entries", () => {
+  assert.equal(
+    formatDocsNavigation([
+      "/privacy-policy",
+      "https://docs.base.org/terms-of-service",
+      "https://example.com/not-docs",
+    ]),
+    [
+      "- https://docs.base.org/privacy-policy",
+      "- https://docs.base.org/terms-of-service",
+    ].join("\n"),
+  );
+});
+
 test("formats nested groups embedded inside pages", () => {
   const navigation = {
     tabs: [
